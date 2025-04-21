@@ -1,2 +1,2 @@
 # full-stack-developer-course
-Repository for submitting excercises during the course.
+Learning the course https://fullstackopen.com/en/
