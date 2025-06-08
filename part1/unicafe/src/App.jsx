@@ -14,6 +14,16 @@ const StatisticLine = ({ text, value }) => {
   );
 };
 
+const StatisticTable = (props) => {
+  return (
+    <table>
+      <tbody>
+        {props.children}
+      </tbody>
+    </table>
+  );
+};
+
 const Button = ({ onClick, text }) => {
   return <button onClick={onClick}>{text}</button>;
 };
@@ -36,16 +46,14 @@ const Statistics = ({ good, neutral, bad }) => {
   };
   
   return (
-    <table>
-      <tbody>
-        <StatisticLine text="good" value={good} />
-        <StatisticLine text="neutral" value={neutral} />
-        <StatisticLine text="bad" value={bad} />
-        <StatisticLine text="all" value={total()} />
-        <StatisticLine text="average" value={avg()} />
-        <StatisticLine text="positive" value={`${goodPercent()} %`} />
-      </tbody>
-    </table>
+    <StatisticTable>
+      <StatisticLine text="good" value={good} />
+      <StatisticLine text="neutral" value={neutral} />
+      <StatisticLine text="bad" value={bad} />
+      <StatisticLine text="all" value={total()} />
+      <StatisticLine text="average" value={avg()} />
+      <StatisticLine text="positive" value={`${goodPercent()} %`} />
+    </StatisticTable>
   );
 };
 
