@@ -5,8 +5,13 @@ const Header = ({ headerText }) => {
   return <h2>{headerText}</h2>;
 };
 
-const StatItem = ({ text, value }) => {
-  return <div className="stat-item">{text} {value}</div>;
+const StatisticLine = ({ text, value }) => {
+  return (
+    <tr className="stat-line">
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
+  );
 };
 
 const Button = ({ onClick, text }) => {
@@ -25,17 +30,22 @@ const Statistics = ({ good, neutral, bad }) => {
   const goodPercent = () => {
     return good/total()*100;
   };
+
+  if (good < 1 && neutral < 1 && bad < 1) {
+    return <div className="stat-line">No feedback given</div>
+  };
   
   return (
-    <div>
-      <Header headerText="statistics" />
-      <StatItem text="good" value={good} />
-      <StatItem text="neutral" value={neutral} />
-      <StatItem text="bad" value={bad} />
-      <StatItem text="all" value={total()} />
-      <StatItem text="average" value={avg()} />
-      <StatItem text="positive" value={`${goodPercent()} %`} />
-    </div>
+    <table>
+      <tbody>
+        <StatisticLine text="good" value={good} />
+        <StatisticLine text="neutral" value={neutral} />
+        <StatisticLine text="bad" value={bad} />
+        <StatisticLine text="all" value={total()} />
+        <StatisticLine text="average" value={avg()} />
+        <StatisticLine text="positive" value={`${goodPercent()} %`} />
+      </tbody>
+    </table>
   );
 };
 
@@ -50,6 +60,7 @@ const App = () => {
       <Button text="good" onClick={() => setGood(good + 1)} />
       <Button text="neutral" onClick={() => setNeutral(neutral + 1)}/>
       <Button text="bad" onClick={() => setBad(bad + 1)} />
+      <Header headerText="statistics" />
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
