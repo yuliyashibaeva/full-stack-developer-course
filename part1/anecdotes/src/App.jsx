@@ -56,27 +56,17 @@ const App = () => {
 
   const pickRandomAnecdote = () => {
     const i = Math.floor(Math.random() * anecdotes.length);
-    console.log(i);
     setSelected(i);
+  };
+  
+  const getCurrentVotes = () => {
+    return votes[selected] || 0;
   };
 
   const addVote = () => {
     const votesCopy = { ...votes };
-
-    if (votesCopy[selected] == null) {
-      votesCopy[selected] = 0;
-    }
-
-    votesCopy[selected] += 1;
+    votesCopy[selected] = getCurrentVotes() + 1;
     setVotes(votesCopy);
-  };
-
-  const getCurrentVotes = () => {
-    if (votes[selected] == null) {
-      return 0;
-    }
-
-    return votes[selected];
   };
 
   const getMostVotedAnecdote = () => {
@@ -92,21 +82,15 @@ const App = () => {
       };
     };
 
-    console.log(mostVoted);
-
     return mostVoted;
   };
-
-
-  console.log(votes);
-  getMostVotedAnecdote();
 
   return (
     <div>
       <Header text="Anecdote of the day" />
       <AnecdoteDisplay 
         anecdote={anecdotes[selected]} 
-        votes={getCurrentVotes()} 
+        votes={getCurrentVotes()}
       />
       <Button text="vote" onClick={addVote}/>
       <Button text="next anecdote" onClick={pickRandomAnecdote} />
