@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Persons from "./components/Persons"
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import personsServer from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -11,18 +11,18 @@ const App = () => {
   const [newFilterValue, setNewFilterValue] = useState('')
 
   const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+    personsServer
+      .getAllPersons()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }  
 
   useEffect(hook, []);
 
-  const isPersonAdded = () => persons.some((person) => person.name === newName);
+  const isPersonAdded = () => 
+    persons.some((person) =>
+      person.name.toLowerCase() === newName.toLowerCase());
 
   const getFilteredPersons = () => {
     return persons.filter((person) => {
@@ -30,22 +30,47 @@ const App = () => {
     }); 
   };
 
+  const updatePerson = (newPerson) => {
+    const currentPerson = persons.find(item => item.name === newName);
+    
+    personsServer
+      .updatePerson(currentPerson.id, newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.map(item => item.id === currentPerson.id ? returnedPerson : item))
+      })
+  }
+
   const addNewPerson = (event) => {
     event.preventDefault();
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: String(persons.length + 1),
     }
 
     if (isPersonAdded()) {
-      alert(`${newName} is already added to phonebook`);
+      if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        updatePerson(newPerson);
+      }
     } else {
-      setPersons([...persons, newPerson]);
+      personsServer
+        .addNewPesron(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+        })
     };
 
     setNewName('');
     setNewNumber('');
+  }
+
+  const deletePersonFromPhonebook = person => {
+    if (confirm(`Do you want to delete ${person.name} ?`)) {
+      personsServer
+        .deletePerson(person.id)
+        .then(returnedPerson => {
+          setPersons(persons.filter(item => item.id !== returnedPerson.id))
+        })
+    }
   }
 
   return (
@@ -65,7 +90,10 @@ const App = () => {
         />
       <h3>Numbers</h3>
       <div>
-        <Persons persons={getFilteredPersons()}/>
+        <Persons 
+          persons={getFilteredPersons()}
+          deletePerson={deletePersonFromPhonebook} 
+        />
       </div>
     </div>
   )
