@@ -3,12 +3,16 @@ import Persons from "./components/Persons"
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import personsServer from './services/persons'
+import Notification from './components/Notification'
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilterValue, setNewFilterValue] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const hook = () => {
     personsServer
@@ -38,6 +42,15 @@ const App = () => {
       .then(returnedPerson => {
         setPersons(persons.map(item => item.id === currentPerson.id ? returnedPerson : item))
       })
+      .catch(error => {
+        setErrorMessage(
+          `Information of ${newName} has already been removed from server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setPersons(persons.filter(item => item.id !== currentPerson.id))
+      })
   }
 
   const addNewPerson = (event) => {
@@ -57,6 +70,13 @@ const App = () => {
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
         })
+
+      setSuccessMessage(
+        `Added ${newName}`
+      )
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
     };
 
     setNewName('');
@@ -76,6 +96,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
+      <Notification message={errorMessage} error={true} />
       <Filter 
         value={newFilterValue}
         setNewFilterValue={(event) => setNewFilterValue(event.target.value)} 
