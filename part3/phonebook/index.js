@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 let persons = require("./data");
 let morgan = require("morgan");
+const cors = require("cors");
 
 const generatePersonId = (persons) => {
   let personId;
@@ -18,6 +19,7 @@ morgan.token("body", function (req) {
 });
 
 app.use(express.json());
+app.use(cors());
 app.use(
   morgan(function (tokens, req, res) {
     return [
@@ -103,6 +105,6 @@ app.post("/api/persons", (request, response) => {
   response.json(person);
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);
