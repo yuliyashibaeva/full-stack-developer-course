@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 let persons = require("./data");
 let morgan = require("morgan");
-const cors = require("cors");
 
 const generatePersonId = (persons) => {
   let personId;
@@ -20,7 +19,6 @@ morgan.token("body", function (req) {
 
 app.use(express.json());
 app.use(express.static("dist"));
-app.use(cors());
 app.use(
   morgan(function (tokens, req, res) {
     return [
