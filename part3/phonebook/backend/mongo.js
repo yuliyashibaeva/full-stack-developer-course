@@ -1,27 +1,5 @@
-require("dotenv").config();
 const mongoose = require("mongoose");
-
-// if (process.argv.length < 3) {
-//   console.log("give password as argument");
-//   process.exit(1);
-// }
-
-//const password = process.argv[2];
-
-const { DB_USERNAME, DB_PASSWORD } = process.env;
-
-const url = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.qnb0r6n.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=Cluster0`;
-
-mongoose.set("strictQuery", false);
-
-mongoose.connect(url, { family: 4 });
-
-const peopleSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-});
-
-const Person = mongoose.model("Person", peopleSchema);
+const Person = require("./models/person");
 
 if (process.argv.length === 4) {
   console.log("adding new person to the DB");
