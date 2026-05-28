@@ -89,7 +89,7 @@ const App = () => {
   const deletePersonFromPhonebook = (person) => {
     if (confirm(`Do you want to delete ${person.name} ?`)) {
       personsServer.deletePerson(person.id).then((returnedPerson) => {
-        setPersons(persons.filter((item) => item.id !== returnedPerson.id));
+        setPersons(persons.filter((item) => item.id !== person.id));
       });
     }
   };
