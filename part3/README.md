@@ -13,6 +13,7 @@ The application is deployed here https://full-stack-developer-course-julia.onren
 3. **GET** `/api/persons/{id}`
 4. **DELETE** `/api/persons/{id}`
 5. **POST** `/api/persons`
+6. **PUT** `/api/persons/{id}`
 
    **Request body:**
 
