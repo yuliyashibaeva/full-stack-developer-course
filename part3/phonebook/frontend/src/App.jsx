@@ -44,15 +44,14 @@ const App = () => {
             item.id === currentPerson.id ? returnedPerson : item
           )
         );
+        setNewName("");
+        setNewNumber("");
       })
       .catch((error) => {
-        setErrorMessage(
-          `Information of ${newName} has already been removed from server`
-        );
+        setErrorMessage(`${error.response.data.error}`);
         setTimeout(() => {
           setErrorMessage(null);
         }, 5000);
-        setPersons(persons.filter((item) => item.id !== currentPerson.id));
       });
   };
 
@@ -72,18 +71,27 @@ const App = () => {
         updatePerson(newPerson);
       }
     } else {
-      personsServer.addNewPesron(newPerson).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-      });
+      personsServer
+        .addNewPesron(newPerson)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
 
-      setSuccessMessage(`Added ${newName}`);
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
+          setSuccessMessage(`Added ${newName}`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 5000);
+
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((error) => {
+          setErrorMessage(`${error.response.data.error}`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+          console.log(error.response.data.error);
+        });
     }
-
-    setNewName("");
-    setNewNumber("");
   };
 
   const deletePersonFromPhonebook = (person) => {
