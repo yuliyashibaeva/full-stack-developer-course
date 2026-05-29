@@ -1,3 +1,7 @@
+// command to run console based DB:
+// node mongo.js - to get all the persons
+// node mongo.js Name 123-123456 - to add a new person to the DB
+
 const mongoose = require("mongoose");
 const Person = require("./models/person");
 
@@ -12,7 +16,7 @@ if (process.argv.length === 4) {
     number: personNumber,
   });
 
-  person.save().then((result) => {
+  person.save().then(() => {
     console.log(`added ${personName} number ${personNumber} to phonebook`);
     mongoose.connection.close();
   });
